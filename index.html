@@ -769,7 +769,7 @@ function escapeHtml(str) {
 
 // ============ PWA SETUP ============
 function setupPWA() {
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => {}); }
 }
 
 // ============ INIT ============

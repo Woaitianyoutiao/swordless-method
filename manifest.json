@@ -2,9 +2,11 @@
   "name": "无相剑法",
   "short_name": "无相剑法",
   "description": "个人综合管理工具 — 每周记账、四象限规划、情绪日记、兴趣记录、学习记录、杂思仓库",
-  "start_url": ".",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
+  "lang": "zh-CN",
   "background_color": "#003153",
   "theme_color": "#003153",
   "icons": [
