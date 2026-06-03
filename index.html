@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="无相剑法">
+<meta name="theme-color" content="#003153">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%23003153'/%3E%3Ctext x='96' y='110' text-anchor='middle' font-size='80' font-family='serif' fill='%23E3C79F'%3E剑%3C/text%3E%3C/svg%3E">
+<title>无相剑法</title>
+<link rel="manifest" id="manifest-link">
+<style>
+:root {
+  --bg: #003153;
+  --gold: #E3C79F;
+  --gold-light: #f0e0c0;
+  --text: #f0ece4;
+  --text-dark: #1a1a1a;
+  --text-muted: #b0a894;
+  --card: #faf7f2;
+  --border: #4a6980;
+  --border-light: #d4cbb8;
+  --shadow: 0 2px 12px rgba(0,0,0,0.25);
+  --radius: 12px;
+  --font-base: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: var(--font-base); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh; min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* Header */
+.header {
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--bg); z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+.header h1 { font-size: 1.3rem; font-weight: 600; color: var(--gold); }
+.header .back-btn {
+  background: none; border: 1px solid var(--gold); color: var(--gold);
+  font-size: 0.9rem; padding: 6px 14px; cursor: pointer; border-radius: 8px;
+}
+.header .back-btn:active { background: rgba(227,199,159,0.15); }
+
+/* Pages */
+.page { display: none; padding: 0 16px 32px; }
+.page.active { display: block; }
+.page-title {
+  font-size: 1.1rem; font-weight: 600; color: var(--gold);
+  padding: 16px 0 12px; text-align: center;
+}
+
+/* Section sub-title within pages */
+.section-title {
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--gold); padding: 20px 0 4px;
+  border-top: 1px solid var(--border); margin-top: 20px;
+}
+.section-title:first-of-type { border-top: none; margin-top: 0; padding-top: 8px; }
+
+/* Principles Section - Gold card on dark bg */
+.principles-section {
+  height: 55vh; height: 55dvh;
+  overflow-y: auto;
+  background: var(--gold);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: var(--shadow);
+  color: var(--text-dark);
+}
+.principles-section h3 {
+  font-size: 1rem; color: var(--text-dark); margin-bottom: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.principles-section ol { padding-left: 24px; }
+.principles-section li {
+  padding: 10px 8px; border-bottom: 1px solid rgba(0,0,0,0.1);
+  font-size: 0.95rem; line-height: 1.5;
+}
+.principles-section li:last-child { border-bottom: none; }
+.principles-section li input {
+  width: 100%; font-size: 0.95rem; border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 6px; padding: 6px 10px; background: rgba(255,255,255,0.6);
+  color: var(--text-dark); font-family: inherit;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 16px; border: none; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  font-family: inherit; gap: 6px;
+  transition: opacity 0.15s, transform 0.1s; min-height: 44px;
+  color: var(--text-dark);
+}
+.btn:active { opacity: 0.8; transform: scale(0.97); }
+.btn-main { background: var(--gold); color: var(--text-dark); }
+.btn-accent { background: var(--gold); color: var(--text-dark); }
+.btn-outline { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
+.btn-outline:active { background: rgba(227,199,159,0.1); }
+.btn-sm { padding: 6px 14px; font-size: 0.85rem; min-height: 34px; border-radius: 8px; }
+.btn-ghost { background: transparent; color: var(--text-dark); padding: 4px 8px; min-height: auto; font-weight: 500; }
+.btn-ghost:active { background: rgba(0,0,0,0.08); }
+
+/* Nav Buttons Grid */
+.nav-buttons {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; padding: 8px 0;
+}
+.nav-buttons .btn {
+  padding: 14px 10px; font-size: 0.95rem; font-weight: 600;
+  flex-direction: column; gap: 2px;
+  background: var(--gold); color: var(--text-dark);
+}
+.nav-buttons .btn .icon { font-size: 1.4rem; }
+
+/* Export Section */
+.export-section { margin: 14px 0; text-align: center; }
+.export-btn {
+  width: 100%; padding: 16px; font-size: 1.05rem; font-weight: 600;
+  background: var(--gold); color: var(--text-dark);
+  border: none; border-radius: var(--radius);
+  cursor: pointer; font-family: inherit; min-height: 50px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.export-btn:active { opacity: 0.85; }
+
+/* Table */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0; border-radius: var(--radius); }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+  font-size: 0.9rem; table-layout: auto; color: var(--text-dark);
+}
+th, td {
+  padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border-light);
+}
+th {
+  background: var(--gold); color: var(--text-dark);
+  font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+}
+td input, td select {
+  width: 100%; font-size: 0.9rem; border: 1px solid var(--border-light);
+  border-radius: 4px; padding: 6px 8px; background: #fff;
+  color: var(--text-dark); font-family: inherit; min-width: 50px;
+}
+td input:focus, td textarea:focus, td select:focus { outline: none; border-color: var(--gold); }
+td textarea {
+  width: 100%; font-size: 0.9rem; border: 1px solid var(--border-light);
+  border-radius: 4px; padding: 8px 10px; background: #fff;
+  color: var(--text-dark); font-family: inherit;
+  resize: vertical; min-height: 64px; line-height: 1.5;
+}
+.wide-col-2 td:nth-child(3) { width: 50%; min-width: 200px; }
+
+.toolbar {
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: 10px; padding: 4px 0;
+}
+
+/* Four Quadrants */
+.quadrants {
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+  gap: 10px; height: 65vh; height: 65dvh; margin: 8px 0;
+}
+.quad {
+  border-radius: var(--radius); padding: 12px 10px;
+  display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow);
+}
+.quad-title {
+  font-size: 0.8rem; font-weight: 600; text-align: center;
+  padding-bottom: 8px; opacity: 0.9; flex-shrink: 0;
+}
+.quad-tasks { flex: 1; overflow-y: auto; }
+.quad-task {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; margin: 4px 0;
+  border-radius: 8px; font-size: 0.85rem; gap: 6px;
+}
+.quad-task .del-x {
+  cursor: pointer; font-size: 1rem;
+  flex-shrink: 0; padding: 2px 6px; border-radius: 50%;
+  opacity: 0.7;
+}
+.quad-task .del-x:active { opacity: 1; }
+.q-add-bar { display: flex; justify-content: flex-end; padding: 4px 0; }
+.q-add-bar .btn { min-height: 36px; background: var(--gold); color: var(--text-dark); }
+.q-empty { text-align: center; padding: 16px 8px; font-size: 0.85rem; opacity: 0.6; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 200;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card); border-radius: var(--radius);
+  padding: 24px 20px; width: 85%; max-width: 360px; color: var(--text-dark);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.modal h3 { font-size: 1.05rem; margin-bottom: 16px; color: var(--text-dark); }
+.modal input, .modal select, .modal textarea {
+  width: 100%; font-size: 1rem; border: 1px solid var(--border-light);
+  border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;
+  background: #fff; color: var(--text-dark); font-family: inherit;
+}
+.modal .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--text-dark); padding: 10px 24px;
+  border-radius: 20px; font-size: 0.9rem; z-index: 300; font-weight: 500;
+  pointer-events: none; opacity: 0; transition: opacity 0.3s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.toast.show { opacity: 1; }
+
+/* Misc */
+.empty-hint { text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.9rem; }
+input[type="date"] { min-width: 110px; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Header -->
+  <div class="header">
+    <h1 id="header-title">无相剑法</h1>
+    <button class="back-btn" id="back-btn" style="display:none" onclick="goHome()">← 首页</button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ==================== HOME ==================== -->
+  <div class="page active" id="page-home">
+    <div class="principles-section">
+      <h3>
+        我的原则
+        <button class="btn btn-ghost btn-sm" id="principle-edit-btn" onclick="toggleEditPrinciples()">编辑</button>
+      </h3>
+      <ol id="principles-list"></ol>
+      <div style="display:none;text-align:right;margin-top:8px;" id="principle-save-wrap">
+        <button class="btn btn-main btn-sm" onclick="savePrinciples()">保存</button>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="navigateTo('account')"><span class="icon">📊</span>每周记账</button>
+      <button class="btn" onclick="navigateTo('plan')"><span class="icon">📋</span>每周规划</button>
+      <button class="btn" onclick="navigateTo('emotion')"><span class="icon">📝</span>情绪日记</button>
+      <button class="btn" onclick="navigateTo('thoughts')"><span class="icon">🌱</span>枯木逢春</button>
+    </div>
+    <div class="export-section">
+      <button class="export-btn" onclick="exportWeekly()">生成本周总结并清空</button>
+    </div>
+  </div>
+
+  <!-- ==================== WEEKLY ACCOUNT ==================== -->
+  <div class="page" id="page-account">
+    <div class="page-title">每周记账</div>
+    <div class="toolbar">
+      <button class="btn btn-outline btn-sm" id="account-edit-btn" onclick="toggleEditTable('account')">编辑</button>
+      <button class="btn btn-main btn-sm" id="account-save-btn" style="display:none" onclick="saveTable('account')">保存</button>
+    </div>
+    <div class="table-wrap">
+      <table id="account-table">
+        <thead><tr><th>类别</th><th>实际金额</th><th>预期金额</th></tr></thead>
+        <tbody id="account-tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addRow('account')" style="margin-top:8px">+ 添加行</button>
+  </div>
+
+  <!-- ==================== WEEKLY PLAN ==================== -->
+  <div class="page" id="page-plan">
+    <div class="page-title">每周规划</div>
+    <div class="q-add-bar">
+      <button class="btn btn-sm" onclick="openPlanModal()">➕ 添加任务</button>
+    </div>
+    <div class="quadrants" id="quadrants"></div>
+  </div>
+
+  <!-- ==================== EMOTION DIARY ==================== -->
+  <div class="page" id="page-emotion">
+    <div class="page-title">情绪日记</div>
+    <div class="toolbar">
+      <button class="btn btn-outline btn-sm" id="emotion-edit-btn" onclick="toggleEditTable('emotion')">编辑</button>
+      <button class="btn btn-main btn-sm" id="emotion-save-btn" style="display:none" onclick="saveTable('emotion')">保存</button>
+    </div>
+    <div class="table-wrap">
+      <table id="emotion-table" class="wide-col-2">
+        <thead><tr><th>日期</th><th>情绪</th><th>具体事件</th></tr></thead>
+        <tbody id="emotion-tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addRow('emotion')" style="margin-top:8px">+ 添加行</button>
+  </div>
+
+  <!-- ==================== REVIVAL (枯木逢春) ==================== -->
+  <div class="page" id="page-thoughts">
+
+    <!-- Interest Record -->
+    <div class="section-title">兴趣记录</div>
+    <div class="toolbar">
+      <button class="btn btn-outline btn-sm" id="interest-edit-btn" onclick="toggleEditTable('interest')">编辑</button>
+      <button class="btn btn-main btn-sm" id="interest-save-btn" style="display:none" onclick="saveTable('interest')">保存</button>
+    </div>
+    <div class="table-wrap">
+      <table id="interest-table" class="wide-col-2">
+        <thead><tr><th>日期</th><th>兴趣</th><th>描述</th></tr></thead>
+        <tbody id="interest-tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addRow('interest')" style="margin-top:4px">+ 添加行</button>
+
+    <!-- Study Record -->
+    <div class="section-title">学习记录</div>
+    <div class="toolbar">
+      <button class="btn btn-outline btn-sm" id="study-edit-btn" onclick="toggleEditTable('study')">编辑</button>
+      <button class="btn btn-main btn-sm" id="study-save-btn" style="display:none" onclick="saveTable('study')">保存</button>
+    </div>
+    <div class="table-wrap">
+      <table id="study-table" class="wide-col-2">
+        <thead><tr><th>日期</th><th>类别</th><th>内容</th></tr></thead>
+        <tbody id="study-tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addRow('study')" style="margin-top:4px">+ 添加行</button>
+
+    <!-- Misc Thoughts (original) -->
+    <div class="section-title">杂思仓库</div>
+    <div class="toolbar">
+      <button class="btn btn-outline btn-sm" id="thoughts-edit-btn" onclick="toggleEditTable('thoughts')">编辑</button>
+      <button class="btn btn-main btn-sm" id="thoughts-save-btn" style="display:none" onclick="saveTable('thoughts')">保存</button>
+    </div>
+    <div class="table-wrap">
+      <table id="thoughts-table" class="wide-col-2">
+        <thead><tr><th>日期</th><th>标签</th><th>具体杂思</th></tr></thead>
+        <tbody id="thoughts-tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addRow('thoughts')" style="margin-top:4px">+ 添加行</button>
+  </div>
+
+  <!-- Plan Add Modal -->
+  <div class="modal-overlay" id="plan-modal">
+    <div class="modal">
+      <h3>添加任务</h3>
+      <input type="text" id="plan-task-input" placeholder="输入任务名称">
+      <select id="plan-quadrant-select">
+        <option value="q1">重要且紧急</option>
+        <option value="q2">重要且不紧急</option>
+        <option value="q3">不重要但紧急</option>
+        <option value="q4">不重要且不紧急</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn btn-outline btn-sm" onclick="closePlanModal()" style="color:var(--text-dark);border-color:var(--text-dark);">取消</button>
+        <button class="btn btn-main btn-sm" onclick="addPlanTask()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DATA LAYER ============
+const DEFAULTS = {
+  principles: [
+    '知行合一，言出必行',
+    '每日反省，持续改进',
+    '专注当下，一次一事',
+    '保持好奇，终身学习',
+    '待人以诚，换位思考',
+    '身体为先，健康第一',
+    '简单生活，减少物欲',
+    '勇于尝试，不怕失败',
+    '珍惜时间，拒绝拖延',
+    '感恩所有，知足常乐'
+  ],
+  weeklyAccount: [],
+  weeklyPlan: [],
+  emotionDiary: [],
+  interestRecord: [],
+  studyRecord: [],
+  miscThoughts: []
+};
+
+function loadData(key) {
+  const raw = localStorage.getItem(key);
+  if (raw === null) return JSON.parse(JSON.stringify(DEFAULTS[key]));
+  try { return JSON.parse(raw); } catch(e) { return JSON.parse(JSON.stringify(DEFAULTS[key])); }
+}
+function saveData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let principles      = loadData('principles');
+let weeklyAccount   = loadData('weeklyAccount');
+let weeklyPlan      = loadData('weeklyPlan');
+let emotionDiary    = loadData('emotionDiary');
+let interestData    = loadData('interestRecord');
+let studyData       = loadData('studyRecord');
+let miscThoughts    = loadData('miscThoughts');
+
+let editingPrinciples = false;
+let editingTables = {};
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ============ NAVIGATION ============
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  document.getElementById('back-btn').style.display = 'inline-block';
+  document.getElementById('header-title').textContent =
+    {account:'每周记账',plan:'每周规划',emotion:'情绪日记',thoughts:'枯木逢春'}[page] || '无相剑法';
+
+  if (page === 'account') renderAccount();
+  else if (page === 'plan') renderPlan();
+  else if (page === 'emotion') renderEmotion();
+  else if (page === 'thoughts') renderThoughts();
+
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('back-btn').style.display = 'none';
+  document.getElementById('header-title').textContent = '无相剑法';
+  renderPrinciples();
+  window.scrollTo(0, 0);
+}
+
+// ============ TOAST ============
+function toast(msg, duration) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), duration || 1800);
+}
+
+// ============ PRINCIPLES ============
+function renderPrinciples() {
+  const list = document.getElementById('principles-list');
+  const saveWrap = document.getElementById('principle-save-wrap');
+  const editBtn = document.getElementById('principle-edit-btn');
+
+  if (editingPrinciples) {
+    editBtn.textContent = '取消';
+    saveWrap.style.display = 'block';
+    list.innerHTML = principles.map((p, i) =>
+      `<li><input type="text" value="${escapeHtml(p)}" data-idx="${i}" class="principle-input"></li>`
+    ).join('');
+  } else {
+    editBtn.textContent = '编辑';
+    saveWrap.style.display = 'none';
+    list.innerHTML = principles.map(p => `<li>${escapeHtml(p)}</li>`).join('');
+  }
+}
+
+function toggleEditPrinciples() { editingPrinciples = !editingPrinciples; renderPrinciples(); }
+
+function savePrinciples() {
+  document.querySelectorAll('.principle-input').forEach(inp => {
+    const idx = parseInt(inp.dataset.idx);
+    if (!isNaN(idx) && idx >= 0 && idx < principles.length) {
+      principles[idx] = inp.value.trim() || principles[idx];
+    }
+  });
+  saveData('principles', principles);
+  editingPrinciples = false;
+  renderPrinciples();
+  toast('原则已保存');
+}
+
+// ============ TABLES ============
+const TABLE_CONFIG = {
+  account: {
+    key: 'weeklyAccount', cols: ['category','actual','expected'],
+    getData: () => weeklyAccount, setData: (d) => { weeklyAccount = d; },
+    defaultRow: () => ({ id: genId(), category: '', actual: '', expected: '' }),
+    textAreaCol: -1
+  },
+  emotion: {
+    key: 'emotionDiary', cols: ['date','emotion','event'],
+    getData: () => emotionDiary, setData: (d) => { emotionDiary = d; },
+    defaultRow: () => ({ id: genId(), date: todayStr(), emotion: '', event: '' }),
+    textAreaCol: 2
+  },
+  interest: {
+    key: 'interestRecord', cols: ['date','interest','description'],
+    labels: ['日期','兴趣','描述'],
+    getData: () => interestData, setData: (d) => { interestData = d; },
+    defaultRow: () => ({ id: genId(), date: todayStr(), interest: '', description: '' }),
+    textAreaCol: 2
+  },
+  study: {
+    key: 'studyRecord', cols: ['date','category','content'],
+    labels: ['日期','类别','内容'],
+    getData: () => studyData, setData: (d) => { studyData = d; },
+    defaultRow: () => ({ id: genId(), date: todayStr(), category: '', content: '' }),
+    textAreaCol: 2
+  },
+  thoughts: {
+    key: 'miscThoughts', cols: ['date','tag','thought'],
+    labels: ['日期','标签','具体杂思'],
+    getData: () => miscThoughts, setData: (d) => { miscThoughts = d; },
+    defaultRow: () => ({ id: genId(), date: todayStr(), tag: '', thought: '' }),
+    textAreaCol: 2
+  }
+};
+
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 6); }
+
+function renderTable(type) {
+  const cfg = TABLE_CONFIG[type];
+  const data = cfg.getData();
+  const tbody = document.getElementById(type + '-tbody');
+  const editing = editingTables[type] || false;
+
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="${cfg.cols.length}" class="empty-hint">暂无数据，点击"编辑"后添加</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(row =>
+    '<tr>' + cfg.cols.map((col, ci) => {
+      const val = row[col] || '';
+      if (!editing) return `<td>${escapeHtml(val)}</td>`;
+      if (col === 'date') return `<td><input type="date" value="${escapeHtml(val)}" data-id="${row.id}" data-col="${col}"></td>`;
+      if (cfg.textAreaCol === ci) return `<td><textarea data-id="${row.id}" data-col="${col}">${escapeHtml(val)}</textarea></td>`;
+      return `<td><input type="text" value="${escapeHtml(val)}" data-id="${row.id}" data-col="${col}"></td>`;
+    }).join('') +
+    (editing ? `<td><button class="btn btn-ghost btn-sm" onclick="deleteRow('${type}','${row.id}')">✕</button></td>` : '') +
+    '</tr>'
+  ).join('');
+}
+
+function toggleEditTable(type) {
+  editingTables[type] = !editingTables[type];
+  document.getElementById(type + '-edit-btn').style.display = editingTables[type] ? 'none' : 'inline-flex';
+  document.getElementById(type + '-save-btn').style.display = editingTables[type] ? 'inline-flex' : 'none';
+  renderTable(type);
+}
+
+function saveTable(type) {
+  const cfg = TABLE_CONFIG[type];
+  const tbody = document.getElementById(type + '-tbody');
+  const data = cfg.getData();
+
+  tbody.querySelectorAll('input').forEach(inp => {
+    const row = data.find(r => r.id === inp.dataset.id);
+    if (row) row[inp.dataset.col] = inp.value;
+  });
+  tbody.querySelectorAll('textarea').forEach(ta => {
+    const row = data.find(r => r.id === ta.dataset.id);
+    if (row) row[ta.dataset.col] = ta.value;
+  });
+
+  cfg.setData(data);
+  saveData(cfg.key, data);
+  editingTables[type] = false;
+  document.getElementById(type + '-edit-btn').style.display = 'inline-flex';
+  document.getElementById(type + '-save-btn').style.display = 'none';
+  renderTable(type);
+  toast('已保存');
+}
+
+function addRow(type) {
+  const cfg = TABLE_CONFIG[type];
+  if (!editingTables[type]) {
+    editingTables[type] = true;
+    document.getElementById(type + '-edit-btn').style.display = 'none';
+    document.getElementById(type + '-save-btn').style.display = 'inline-flex';
+  }
+  cfg.getData().push(cfg.defaultRow());
+  renderTable(type);
+}
+
+function deleteRow(type, id) {
+  const cfg = TABLE_CONFIG[type];
+  const data = cfg.getData();
+  const idx = data.findIndex(r => r.id === id);
+  if (idx >= 0) data.splice(idx, 1);
+  cfg.setData(data);
+  renderTable(type);
+}
+
+function renderAccount()  { renderTable('account'); }
+function renderEmotion()  { renderTable('emotion'); }
+function renderThoughts() { renderTable('interest'); renderTable('study'); renderTable('thoughts'); }
+
+// ============ WEEKLY PLAN ============
+const QUAD_CONFIG = [
+  { key:'q1', title:'重要且紧急',      bg:'#AE322A', textColor:'#f0ece4', taskBg:'rgba(255,255,255,0.15)' },
+  { key:'q2', title:'重要且不紧急',    bg:'#006A80', textColor:'#f0ece4', taskBg:'rgba(255,255,255,0.15)' },
+  { key:'q3', title:'不重要但紧急',    bg:'#167C66', textColor:'#f0ece4', taskBg:'rgba(255,255,255,0.15)' },
+  { key:'q4', title:'不重要且不紧急',  bg:'#FAE1D9', textColor:'#2c2c2c', taskBg:'rgba(0,0,0,0.06)' }
+];
+
+function renderPlan() {
+  document.getElementById('quadrants').innerHTML = QUAD_CONFIG.map(q => {
+    const tasks = weeklyPlan.filter(t => t.quadrant === q.key);
+    return `
+      <div class="quad" style="background:${q.bg}; color:${q.textColor}">
+        <div class="quad-title" style="color:${q.textColor}">${q.title}（${tasks.length}）</div>
+        <div class="quad-tasks">
+          ${tasks.length === 0
+            ? `<div class="q-empty" style="color:${q.textColor}">暂无任务</div>`
+            : tasks.map(t => `
+              <div class="quad-task" style="background:${q.taskBg}; color:${q.textColor}">
+                <span>${escapeHtml(t.text)}</span>
+                <span class="del-x" style="color:${q.textColor}" onclick="deletePlanTask('${t.id}')">✕</span>
+              </div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openPlanModal() {
+  document.getElementById('plan-modal').classList.add('show');
+  document.getElementById('plan-task-input').value = '';
+  document.getElementById('plan-task-input').focus();
+}
+function closePlanModal() { document.getElementById('plan-modal').classList.remove('show'); }
+function addPlanTask() {
+  const text = document.getElementById('plan-task-input').value.trim();
+  if (!text) { toast('请输入任务名称'); return; }
+  weeklyPlan.push({ id: genId(), text, quadrant: document.getElementById('plan-quadrant-select').value });
+  saveData('weeklyPlan', weeklyPlan);
+  closePlanModal();
+  renderPlan();
+  toast('任务已添加');
+}
+function deletePlanTask(id) {
+  weeklyPlan = weeklyPlan.filter(t => t.id !== id);
+  saveData('weeklyPlan', weeklyPlan);
+  renderPlan();
+}
+
+// ============ WEEKLY EXPORT ============
+function getWeekRange() {
+  const now = new Date();
+  const day = now.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + mondayOffset);
+  monday.setHours(0,0,0,0);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23,59,59,999);
+  return { monday, sunday };
+}
+
+function isInWeek(dateStr, monday, sunday) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  return d >= monday && d <= sunday;
+}
+
+function buildTableMd(title, cols, data) {
+  let md = `## ${title}\n\n`;
+  if (data.length === 0) { md += `（无数据）\n\n`; return md; }
+  md += `| ${cols.join(' | ')} |\n|${cols.map(()=>'---').join('|')}|\n`;
+  data.forEach(r => { md += `| ${cols.map(c => r[c]||'-').join(' | ')} |\n`; });
+  md += '\n';
+  return md;
+}
+
+function exportWeekly() {
+  if (!confirm('将生成本周总结并清空所有数据（每周记账、每周规划、情绪日记、兴趣记录、学习记录、杂思仓库），确定继续？')) return;
+
+  const { monday, sunday } = getWeekRange();
+  const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  const monStr = fmt(monday), sunStr = fmt(sunday);
+
+  const acctData    = weeklyAccount;
+  const planData    = weeklyPlan;
+  const emoData     = emotionDiary.filter(r => isInWeek(r.date, monday, sunday));
+  const intData     = interestData.filter(r => isInWeek(r.date, monday, sunday));
+  const stuData     = studyData.filter(r => isInWeek(r.date, monday, sunday));
+  const thoughtData = miscThoughts.filter(r => isInWeek(r.date, monday, sunday));
+
+  let md = `# 无相剑法 周总结\n\n**周期：${monStr} ～ ${sunStr}**\n\n---\n\n`;
+
+  md += `## 我的原则\n\n`;
+  principles.forEach((p, i) => { md += `${i+1}. ${p}\n`; });
+
+  md += buildTableMd('每周记账', ['类别','实际金额','预期金额'], acctData);
+
+  md += `## 每周规划\n\n`;
+  QUAD_CONFIG.forEach(q => {
+    const tasks = planData.filter(t => t.quadrant === q.key);
+    md += `### ${q.title}\n\n`;
+    if (tasks.length === 0) md += `（无任务）\n\n`;
+    else { tasks.forEach(t => { md += `- ${t.text}\n`; }); md += '\n'; }
+  });
+
+  md += buildTableMd('情绪日记', ['日期','情绪','具体事件'], emoData);
+  md += buildTableMd('兴趣记录', ['日期','兴趣','描述'], intData);
+  md += buildTableMd('学习记录', ['日期','类别','内容'], stuData);
+  md += buildTableMd('杂思仓库', ['日期','标签','具体杂思'], thoughtData);
+
+  md += `---\n*由「无相剑法」生成于 ${new Date().toLocaleString('zh-CN')}*\n`;
+
+  const filename = `无相剑法总结_${monStr}.md`;
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+
+  if (navigator.share && navigator.canShare) {
+    const file = new File([blob], filename, { type: 'text/markdown' });
+    const sd = { title: '无相剑法周总结', files: [file] };
+    if (navigator.canShare(sd)) {
+      navigator.share(sd).then(() => { clearAllData(); toast('已分享并清空数据'); })
+        .catch(() => { fallbackDownload(blob, filename); clearAllData(); toast('已下载并清空数据'); });
+      return;
+    }
+  }
+  fallbackDownload(blob, filename);
+  clearAllData();
+  toast('已下载并清空数据');
+}
+
+function fallbackDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function clearAllData() {
+  weeklyAccount = []; weeklyPlan = []; emotionDiary = [];
+  interestData  = []; studyData    = []; miscThoughts = [];
+  saveData('weeklyAccount',  []);
+  saveData('weeklyPlan',     []);
+  saveData('emotionDiary',   []);
+  saveData('interestRecord', []);
+  saveData('studyRecord',    []);
+  saveData('miscThoughts',   []);
+  renderAccount();
+  renderPlan();
+  renderEmotion();
+  renderThoughts();
+}
+
+// ============ UTILS ============
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============ PWA SETUP ============
+function setupPWA() {
+  const manifest = {
+    name: '无相剑法', short_name: '无相剑法', description: '个人综合管理工具',
+    start_url: '.', display: 'standalone', orientation: 'portrait',
+    background_color: '#003153', theme_color: '#003153',
+    icons: [{
+      src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="#003153"/><text x="96" y="110" text-anchor="middle" font-size="80" font-family="serif" fill="#E3C79F">剑</text></svg>'),
+      sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable'
+    }]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  document.getElementById('manifest-link').href = URL.createObjectURL(blob);
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
+}
+
+// ============ INIT ============
+function init() { renderPrinciples(); setupPWA(); }
+init();
+</script>
+</body>
+</html>
