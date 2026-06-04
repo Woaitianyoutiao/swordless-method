@@ -378,41 +378,32 @@ input[type="date"] { min-width: 110px; }
 
 <script>
 // ============ DATA LAYER ============
-const DEFAULTS = {
-  principles: [
-    '知行合一，言出必行',
-    '每日反省，持续改进',
-    '专注当下，一次一事',
-    '保持好奇，终身学习',
-    '待人以诚，换位思考',
-    '身体为先，健康第一',
-    '简单生活，减少物欲',
-    '勇于尝试，不怕失败',
-    '珍惜时间，拒绝拖延',
-    '感恩所有，知足常乐'
-  ],
-  weeklyAccount: [],
-  weeklyPlan: [],
-  emotionDiary: [],
-  interestRecord: [],
-  studyRecord: [],
-  miscThoughts: []
-};
+const DEFAULT_PRINCIPLES = [
+  '知行合一，言出必行',
+  '每日反省，持续改进',
+  '专注当下，一次一事',
+  '保持好奇，终身学习',
+  '待人以诚，换位思考',
+  '身体为先，健康第一',
+  '简单生活，减少物欲',
+  '勇于尝试，不怕失败',
+  '珍惜时间，拒绝拖延',
+  '感恩所有，知足常乐'
+];
 
-function loadData(key) {
-  const raw = localStorage.getItem(key);
-  if (raw === null) return JSON.parse(JSON.stringify(DEFAULTS[key]));
-  try { return JSON.parse(raw); } catch(e) { return JSON.parse(JSON.stringify(DEFAULTS[key])); }
+// 初始化：先从 localStorage 读取已有数据，仅在键不存在时使用初始值
+let principles      = JSON.parse(localStorage.getItem('principles')    || JSON.stringify(DEFAULT_PRINCIPLES));
+let weeklyAccount   = JSON.parse(localStorage.getItem('weeklyAccount')  || '[]');
+let weeklyPlan      = JSON.parse(localStorage.getItem('weeklyPlan')     || '[]');
+let emotionDiary    = JSON.parse(localStorage.getItem('emotionDiary')   || '[]');
+let interestData    = JSON.parse(localStorage.getItem('interestRecord') || '[]');
+let studyData       = JSON.parse(localStorage.getItem('studyRecord')    || '[]');
+let miscThoughts    = JSON.parse(localStorage.getItem('miscThoughts')   || '[]');
+
+function saveData(key, val) {
+  console.log('保存数据：', key, val);
+  localStorage.setItem(key, JSON.stringify(val));
 }
-function saveData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-let principles      = loadData('principles');
-let weeklyAccount   = loadData('weeklyAccount');
-let weeklyPlan      = loadData('weeklyPlan');
-let emotionDiary    = loadData('emotionDiary');
-let interestData    = loadData('interestRecord');
-let studyData       = loadData('studyRecord');
-let miscThoughts    = loadData('miscThoughts');
 
 let editingPrinciples = false;
 let editingTables = {};
@@ -485,6 +476,7 @@ function savePrinciples() {
       principles[idx] = inp.value.trim() || principles[idx];
     }
   });
+  console.log('保存原则：', principles);
   saveData('principles', principles);
   editingPrinciples = false;
   renderPrinciples();
@@ -576,6 +568,7 @@ function saveTable(type) {
   });
 
   cfg.setData(data);
+  console.log('保存表格 ' + type + '：', data);
   saveData(cfg.key, data);
   editingTables[type] = false;
   document.getElementById(type + '-edit-btn').style.display = 'inline-flex';
@@ -601,6 +594,8 @@ function deleteRow(type, id) {
   const idx = data.findIndex(r => r.id === id);
   if (idx >= 0) data.splice(idx, 1);
   cfg.setData(data);
+  console.log('删除行 ' + type + '：', data);
+  saveData(cfg.key, data);
   renderTable(type);
 }
 
@@ -645,6 +640,7 @@ function addPlanTask() {
   const text = document.getElementById('plan-task-input').value.trim();
   if (!text) { toast('请输入任务名称'); return; }
   weeklyPlan.push({ id: genId(), text, quadrant: document.getElementById('plan-quadrant-select').value });
+  console.log('添加规划任务：', weeklyPlan);
   saveData('weeklyPlan', weeklyPlan);
   closePlanModal();
   renderPlan();
@@ -652,6 +648,7 @@ function addPlanTask() {
 }
 function deletePlanTask(id) {
   weeklyPlan = weeklyPlan.filter(t => t.id !== id);
+  console.log('删除规划任务：', weeklyPlan);
   saveData('weeklyPlan', weeklyPlan);
   renderPlan();
 }
@@ -747,6 +744,7 @@ function fallbackDownload(blob, filename) {
 }
 
 function clearAllData() {
+  console.log('清空所有数据');
   weeklyAccount = []; weeklyPlan = []; emotionDiary = [];
   interestData  = []; studyData    = []; miscThoughts = [];
   saveData('weeklyAccount',  []);
